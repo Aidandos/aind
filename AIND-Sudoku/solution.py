@@ -2,7 +2,8 @@ assignments = []
 
 rows = 'ABCDEFGHI'
 cols = '123456789'
-
+"""Most code here is from Udacity course. Although I came up with other solutions during the course
+I used the Udacity versions for some functions."""
 
 def assign_value(values, box, value):
     """
