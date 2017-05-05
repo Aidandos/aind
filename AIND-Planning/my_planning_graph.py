@@ -323,10 +323,10 @@ class PlanningGraph():
         for action in self.all_actions:
             action_node = PgNode_a(action)
             if action_node.prenodes.issubset(self.s_levels[level]):
-                action_nodes.append(action_node)
                 for s_node in self.s_levels[level]:
                     s_node.children.add(action_node)
                     action_node.parents.add(s_node)
+                action_nodes.append(action_node)
 
         self.a_levels.append(action_nodes)
 
@@ -394,7 +394,7 @@ class PlanningGraph():
         """
         if not self.serial:
             return False
-        if node_a1.is_persistent or node_a2.is_persistent:
+        if (node_a1.is_persistent == True) or (node_a2.is_persistent == True):
             return False
         return True
 
@@ -414,11 +414,12 @@ class PlanningGraph():
         """
         # TODO test for Inconsistent Effects between nodes
 
-        for effect in node_a1.action.effect_add:
-            if effect in node_a2.action.effect_rem:
+        for eff in node_a2.action.effect_add:
+            if eff in node_a1.action.effect_rem == True:
                 return True
-        for effect in node_a2.action.effect_add:
-            if effect in node_a1.action.effect_rem:
+
+        for eff in node_a1.action.effect_add:
+            if eff in node_a2.action.effect_rem == True:
                 return True
 
         return False
@@ -439,17 +440,20 @@ class PlanningGraph():
         """
         # TODO test for Interference between nodes
 
-        for effect in node_a2.action.effect_add:
-            if effect in node_a1.action.precond_neg:
+        for eff in node_a2.action.effect_add:
+            if eff in node_a1.action.precond_neg == True:
                 return True
-        for effect in node_a1.action.effect_add:
-            if effect in node_a2.action.precond_neg:
+
+        for eff in node_a1.action.effect_add:
+            if eff in node_a2.action.precond_neg == True:
                 return True
-        for effect in node_a2.action.effect_rem:
-            if effect in node_a1.action.precond_pos:
+
+        for eff in node_a2.action.effect_rem:
+            if eff in node_a1.action.precond_pos == True:
                 return True
-        for effect in node_a1.action.effect_rem:
-            if effect in node_a2.action.precond_pos:
+
+        for eff in node_a1.action.effect_rem:
+            if eff in node_a2.action.precond_pos == True:
                 return True
 
         return False
@@ -466,9 +470,10 @@ class PlanningGraph():
         """
 
         # TODO test for Competing Needs between nodes
+
         for precondition_a1 in node_a1.parents:
             for precondition_a2 in node_a2.parents:
-                if precondition_a1.is_mutex(precondition_a2):
+                if precondition_a1.is_mutex(precondition_a2) == True:
                     return True
 
         return False
@@ -506,6 +511,7 @@ class PlanningGraph():
         :return: bool
         """
         # TODO test for negation between nodes
+
         isMutex = (node_s1.symbol == node_s2.symbol) and (
             node_s1.is_pos != node_s2.is_pos)
 
