@@ -17,7 +17,8 @@ from functools import lru_cache
 class HaveCakeProblem(Problem):
     def __init__(self, initial: FluentState, goal: list):
         self.state_map = initial.pos + initial.neg
-        Problem.__init__(self, encode_state(initial, self.state_map), goal=goal)
+        Problem.__init__(self, encode_state(
+            initial, self.state_map), goal=goal)
         self.actions_list = self.get_actions()
 
     def get_actions(self):
@@ -37,7 +38,7 @@ class HaveCakeProblem(Problem):
                              [effect_add, effect_rem])
         return [eat_action, bake_action]
 
-    def actions(self, state: str) -> list:  # of Action
+    def actions(self, state: str):  # of Action
         possible_actions = []
         kb = PropKB()
         kb.tell(decode_state(state, self.state_map).pos_sentence())
@@ -70,7 +71,7 @@ class HaveCakeProblem(Problem):
                 new_state.neg.append(fluent)
         return encode_state(new_state, self.state_map)
 
-    def goal_test(self, state: str) -> bool:
+    def goal_test(self, state: str):
         kb = PropKB()
         kb.tell(decode_state(state, self.state_map).pos_sentence())
         for clause in self.goal:
